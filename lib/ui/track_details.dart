@@ -4,6 +4,7 @@ import 'package:credicxo/models/detail_track_model.dart';
 import 'package:credicxo/models/lyrics_model.dart';
 import 'package:credicxo/models/track_model.dart';
 import 'package:credicxo/state_event/network_event.dart';
+import 'package:credicxo/state_event/network_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,7 +26,7 @@ class TrackDetails extends StatelessWidget {
         ),
         body: BlocProvider(
           create: (context) => NetworkBloc()..add(ListenConnection()),
-          child: TrackfDetailsScreen(
+          child: TrackScreen(
             trackData: trackData,
           ),
         ),
@@ -33,7 +34,24 @@ class TrackDetails extends StatelessWidget {
     );
   }
 }
+class TrackScreen extends StatelessWidget {
 
+  final TrackData trackData;
+
+  const TrackScreen({Key key, this.trackData}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: BlocBuilder<NetworkBloc, NetworkState>(
+        builder: (context, state) {
+          if (state is ConnectionFailure) return Text("No Internet Connection");
+         else
+            return TrackfDetailsScreen(trackData: trackData,);
+        },
+      ),
+    );
+  }
+}
 class TrackfDetailsScreen extends StatelessWidget {
   final TrackData trackData;
 
